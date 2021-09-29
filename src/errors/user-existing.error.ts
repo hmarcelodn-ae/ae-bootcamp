@@ -1,4 +1,4 @@
-import { CustomError } from "./custom.error";
+import { CustomError } from './custom.error';
 
 export class UserExistingError extends CustomError {
     statusCode: number = 400;

@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application } from 'express';
 import { BaseController } from './controllers/base';
+import { errorHandler } from './middlewares/error-handler.middleware';
 
 export class App {
     public app: Application;
@@ -17,6 +18,7 @@ export class App {
 
         this.initializeMiddlewares();
         this.initializeControllers(controllers);
+        this.app.use(errorHandler);
     }
 
     listen = () => {
@@ -29,7 +31,7 @@ export class App {
         this.app.use(compression());
         this.app.use(express.json());
         this.app.use(cookieParser());
-        this.app.use(cors())
+        this.app.use(cors());
     }
 
     protected initializeControllers = (controllers: Array<BaseController>): void => {

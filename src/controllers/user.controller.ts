@@ -29,6 +29,16 @@ export class UserController extends BaseController {
         res.status(201).send(user);
     }
 
+    signin = async (req: Request, res: Response, next: NextFunction) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            throw new RequestValidationError(errors.array());
+        }
+
+        res.status(200).send({});
+    }
+
     protected initializeRouter = (): void => {
         this.router.post(
             `${this.path}/signup`,
@@ -40,5 +50,12 @@ export class UserController extends BaseController {
             body('password').notEmpty(),
             this.signup
         );
+
+        this.router.post(
+            `${this.path}/login`,
+            body('email').notEmpty().isEmail(),
+            body('password').notEmpty(),
+            this.signin
+        )
     }
 }

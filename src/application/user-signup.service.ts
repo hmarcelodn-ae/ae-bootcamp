@@ -1,6 +1,6 @@
 import PasswordValidator from 'password-validator';
 import { Service } from 'typedi';
-import * as CryptoJS from "crypto-js";
+import * as CryptoJS from 'crypto-js';
 import { getCustomRepository } from 'typeorm';
 import { User } from '../entity/user';
 import { PasswordPolicyError } from '../errors/password-policy.error';

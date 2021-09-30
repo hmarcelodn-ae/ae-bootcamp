@@ -3,12 +3,11 @@ import { Service } from 'typedi';
 import * as CryptoJS from 'crypto-js';
 import * as jwt from 'jsonwebtoken';
 
+import { GENERAL } from '../infrastructure/constants';
 import { UserLoginDto } from '../model/user-login.dto';
 import { TokenResponseDto } from '../model/token-response.dto';
 import { UserRepository } from '../repository/user.repository';
 import { InvalidUsernamePasswordError } from '../errors/user-invalid-username-password.error';
-import { GENERAL } from '../infrastructure/constants';
-import { TokenBlackListRepository } from '../repository/token-black-list.repository';
 
 @Service()
 export class UserLoginService {
@@ -36,7 +35,7 @@ export class UserLoginService {
             id: user.userIdentity
         };
 
-        const token = jwt.sign(payload, GENERAL.EXPIRATION_KEY, {
+        const token = jwt.sign(payload, GENERAL.ENCRYPTION_TOKEN, {
             expiresIn: GENERAL.EXPIRATION_KEY
         });
 

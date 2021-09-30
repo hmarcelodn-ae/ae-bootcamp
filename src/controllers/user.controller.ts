@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { Service } from 'typedi';
 import { body, validationResult } from 'express-validator';
+
 import { BaseController } from './base';
+import { UserLoginService } from '../application/user-login.service';
 import { UserSignupService } from '../application/user-signup.service';
 import { RequestValidationError } from '../errors/request-validation.error';
 
@@ -10,7 +12,8 @@ export class UserController extends BaseController {
     public path: string = '/user';
 
     constructor(
-        protected readonly userSignupService: UserSignupService
+        protected readonly userSignupService: UserSignupService,
+        protected readonly userLoginService: UserLoginService
     ) {
         super();
 
@@ -27,6 +30,8 @@ export class UserController extends BaseController {
         const user = await this.userSignupService.signup(req.body);
 
         res.status(201).send(user);
+
+        return next();
     }
 
     signin = async (req: Request, res: Response, next: NextFunction) => {
@@ -36,7 +41,11 @@ export class UserController extends BaseController {
             throw new RequestValidationError(errors.array());
         }
 
-        res.status(200).send({});
+        const token = await this.userLoginService.login(req.body);
+
+        res.status(200).send(token);
+
+        return next();
     }
 
     protected initializeRouter = (): void => {

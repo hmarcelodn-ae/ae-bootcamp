@@ -7,6 +7,7 @@ import { PasswordPolicyError } from '../errors/password-policy.error';
 import { UserExistingError } from '../errors/user-existing.error';
 import { UserSignupDto } from '../model/user-signup.dto';
 import { UserRepository } from '../repository/user.repository';
+import { GENERAL } from '../infrastructure/constants';
 
 @Service()
 export class UserSignupService {
@@ -27,7 +28,7 @@ export class UserSignupService {
             throw new PasswordPolicyError()
         }
 
-        const encryptedPassword = CryptoJS.AES.encrypt(userSignupInput.password, 'AgileEngineBootcamp');
+        const encryptedPassword = CryptoJS.AES.encrypt(userSignupInput.password, GENERAL.ENCRYPTION_TOKEN);
 
         const newUser = new User();
         newUser.email = userSignupInput.email;

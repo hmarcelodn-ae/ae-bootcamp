@@ -6,7 +6,7 @@
    "scripts": {
       "commit": "git-cz",
       "start:dev": "nodemon src/server.ts && ts-node src/server.ts",
-      "start": "ts-node src/index.ts",
+      "start": "ts-node src/server.ts",
       "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
    },
    "husky": {

@@ -6,6 +6,22 @@ import { GENERAL } from '../infrastructure/constants';
 import { NotAuthorizedError } from '../errors/not-authorized.error';
 import { TokenBlackListRepository } from '../repository/token-black-list.repository';
 
+interface UserPayload {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    uuid: number;
+}
+
+declare global {
+    namespace Express {
+        interface Request {
+            currentUser?: UserPayload
+        }
+    }
+}
+
 export const authorize = async (
     req: Request,
     res: Response,
@@ -24,7 +40,14 @@ export const authorize = async (
     }
 
     try {
-        jwt.verify(token, GENERAL.ENCRYPTION_TOKEN);
+        const payload: any = jwt.verify(token, GENERAL.ENCRYPTION_TOKEN);
+        req.currentUser = {
+            uuid: payload.uuid,
+            email: payload.email,
+            lastName: payload.lastName,
+            firstName: payload.firstName,
+            id: payload.id
+        }
     } catch(err) {
         throw new NotAuthorizedError();
     }

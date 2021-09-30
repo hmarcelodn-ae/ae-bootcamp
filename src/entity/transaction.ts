@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "./user";
 
 export enum PaymentType {
     PAYMENT_RECEIVED = 'payment_received',
@@ -25,4 +26,7 @@ export class Transaction {
 
     @Column()
     value: number;
+
+    @ManyToOne(() => User, { cascade: true })
+    user: User;
 }

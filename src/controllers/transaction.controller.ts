@@ -1,23 +1,30 @@
 import { NextFunction, Request, Response } from 'express';
 import { Service } from 'typedi';
+import { body, header } from 'express-validator';
 
 import { BaseController } from './base';
 import { authorize } from '../middlewares/authorize.middleware';
 import { validateRequest } from '../middlewares/validation-request.middleware';
-import { body, header } from 'express-validator';
+import { TransactionFillService } from '../application/transaction-fill.service';
 
 @Service()
 export class TransactionController extends BaseController {
     public path: string = '/transactions';
 
-    constructor() {
+    constructor(
+        protected readonly transactionFillService: TransactionFillService
+    ) {
         super();
 
         this.initializeRouter();
     }
 
-    fill = (req: Request, res: Response, next: NextFunction) => {
-        res.status(200).send();
+    fill = async (req: Request, res: Response, next: NextFunction) => {
+        const { value } = req.body;
+
+        await this.transactionFillService.fill(value, req.currentUser!.uuid);
+
+        res.status(201).send();
 
         next();
     }
@@ -69,6 +76,6 @@ export class TransactionController extends BaseController {
             authorize,
             validateRequest,
             this.get
-        )
+        );
     }
 }

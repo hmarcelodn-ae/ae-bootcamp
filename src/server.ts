@@ -19,3 +19,7 @@ const app = new App(
 (() => {
     app.listen();
 })();
+
+process.on('SIGTERM', () => {
+    process.kill(process.pid);
+});

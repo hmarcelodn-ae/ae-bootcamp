@@ -8,13 +8,14 @@ import { TokenResponseDto } from '../model/token-response.dto';
 import { UserRepository } from '../repository/user.repository';
 import { InvalidUsernamePasswordError } from '../errors/user-invalid-username-password.error';
 import { GENERAL } from '../infrastructure/constants';
+import { TokenBlackListRepository } from '../repository/token-black-list.repository';
 
 @Service()
 export class UserLoginService {
     constructor() {}
 
     login = async (model: UserLoginDto): Promise<TokenResponseDto> => {
-        const userRepository = getCustomRepository(UserRepository);
+        const userRepository = getCustomRepository(UserRepository);        
         const user = await userRepository.findByEmail(model.email);
 
         if (!user) {

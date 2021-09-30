@@ -7,6 +7,7 @@ import { UserLoginService } from '../application/user-login.service';
 import { UserSignupService } from '../application/user-signup.service';
 import { RequestValidationError } from '../errors/request-validation.error';
 import { UserLogoutService } from '../application/user-logout.service';
+import { validateRequest } from '../middlewares/validation-request.middleware';
 
 @Service()
 export class UserController extends BaseController {
@@ -23,12 +24,6 @@ export class UserController extends BaseController {
     }
 
     signup = async (req: Request, res: Response, next: NextFunction) => {
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-           throw new RequestValidationError(errors.array());
-        }
-
         const user = await this.userSignupService.signup(req.body);
 
         res.status(201).send(user);
@@ -37,12 +32,6 @@ export class UserController extends BaseController {
     }
 
     signin = async (req: Request, res: Response, next: NextFunction) => {
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            throw new RequestValidationError(errors.array());
-        }
-
         const token = await this.userLoginService.login(req.body);
 
         res.status(200).send(token);
@@ -51,12 +40,6 @@ export class UserController extends BaseController {
     }
 
     logout = async (req: Request, res: Response, next: NextFunction) => {
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            throw new RequestValidationError(errors.array());
-        }
-
         await this.userLogoutService.logout(req.headers.authorization!);
 
         res.status(200).send();
@@ -73,6 +56,7 @@ export class UserController extends BaseController {
             body('birth_date').notEmpty().isDate(),
             body('email').notEmpty().isEmail(),
             body('password').notEmpty(),
+            validateRequest,
             this.signup
         );
 
@@ -80,12 +64,14 @@ export class UserController extends BaseController {
             `${this.path}/login`,
             body('email').notEmpty().isEmail(),
             body('password').notEmpty(),
+            validateRequest,
             this.signin
         )
 
         this.router.post(
             `${this.path}/logout`,
             header('Authorization').exists(),
+            validateRequest,
             this.logout
         )
     }

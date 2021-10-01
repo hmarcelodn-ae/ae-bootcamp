@@ -58,4 +58,19 @@ export class ExchangeRateService {
 
         return amount * exchangeRate.rate;
     }
+
+    getExchangeRate = async (currency: string): Promise<ExchangeRate> => {
+        await this.sync();
+        const exchangeRateRepository = getCustomRepository(ExchangeRateRepository);
+        const exchangeRate = await exchangeRateRepository.getConversionRate(
+            GENERAL.DEFAULT_CURRENCY, 
+            currency
+        );
+
+        if (!exchangeRate) {
+            throw new ExchangeRateNotFoundError(currency);
+        }
+
+        return exchangeRate;
+    }
 }

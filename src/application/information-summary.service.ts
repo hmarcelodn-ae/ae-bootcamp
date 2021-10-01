@@ -16,7 +16,6 @@ export class InformationSummaryService {
     ) {}
 
     summary = async (userId: number, startDate: Date, endDate: Date, currency: string) => {
-        const transactionRepository = getCustomRepository(TransactionRepository);
         const userRepository = getCustomRepository(UserRepository);
 
         const user = await userRepository.findOne({ id: userId });

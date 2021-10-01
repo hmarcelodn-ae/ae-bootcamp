@@ -10,6 +10,11 @@ export enum PaymentType {
 
 @Entity()
 export class Transaction {
+
+    constructor() {
+        this.date = new Date();
+    }
+
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -26,6 +31,9 @@ export class Transaction {
 
     @Column()
     value: number;
+
+    @Column()
+    date: Date;
 
     @ManyToOne(() => User, { cascade: true })
     user: User;

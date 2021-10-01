@@ -4,6 +4,7 @@ import { Service } from 'typedi';
 import url from 'url';
 import { ExchangeRateService } from '../application/exchange-rate.service';
 import { InformationBalanceService } from '../application/information-balance.service';
+import { InformationSummaryService } from '../application/information-summary.service';
 import { authorize } from '../middlewares/authorize.middleware';
 import { validateRequest } from '../middlewares/validation-request.middleware';
 import { BaseController } from './base';
@@ -14,6 +15,7 @@ export class InformationController extends BaseController {
 
     constructor(
         protected readonly informationBalanceService: InformationBalanceService,
+        protected readonly informationSummaryService: InformationSummaryService,
     ) {
         super();
 
@@ -24,7 +26,7 @@ export class InformationController extends BaseController {
         const query = url.parse(req.url, true).query;
         const balance = await this.informationBalanceService.getBalance(
             req.currentUser!.uuid,
-            query.currency!.toString(),
+            query.currency!.toString().toUpperCase(),
         );
 
         res.status(200).send({
@@ -34,7 +36,25 @@ export class InformationController extends BaseController {
         next();
     }
 
-    summary = (req: Request, res: Response, next: NextFunction) => {}
+    summary = async (req: Request, res: Response, next: NextFunction) => {
+        const query = url.parse(req.url, true).query;
+        const {
+            start_date,
+            end_date,
+            currency
+        } = query;
+        
+        const summary = await this.informationSummaryService.summary(
+            req.currentUser!.uuid,  
+            new Date(start_date!.toString()), 
+            new Date(end_date!.toString()), 
+            currency!.toString()
+        );
+
+        res.status(200).send(summary);
+
+        next();
+    }
 
     series = (req: Request, res: Response, next: NextFunction) => {}
     
@@ -51,6 +71,11 @@ export class InformationController extends BaseController {
 
         this.router.get(
             `${this.path}/summary`,
+            query('currency').exists().notEmpty(),
+            query('start_date').exists().isDate(),
+            query('end_date').exists().isDate(),
+            authorize,
+            validateRequest,
             this.summary
         );
 

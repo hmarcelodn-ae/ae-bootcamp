@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, LessThan, MoreThan, Repository } from 'typeorm';
 import { PaymentType, Transaction } from '../entity/transaction';
 import { User } from '../entity/user';
 
@@ -8,19 +8,17 @@ export class TransactionRepository extends Repository<Transaction> {
         return this.find({ user });
     }
 
-    getPaymentReceivedTransactions(user: User) {
-        return this.find({ user: user, type: PaymentType.PAYMENT_RECEIVED });
+    getPaymentTransactions = (user: User, type: PaymentType) => {
+        return this.find({ user, type });
     }
 
-    getPaymentMadeTransactions(user: User) {
-        return this.find({ user: user, type: PaymentType.PAYMENT_MADE });
-    }
-
-    getPaymentWithdrawTransactions(user: User) {
-        return this.find({ user: user, type: PaymentType.PAYMENT_WITHDRAW });
-    }
-
-    getPaymentFillTransactions(user: User) {
-        return this.find({ user: user, type: PaymentType.PAYMENT_FILL });
+    getTransactionsByPeriod = (user: User, startDate: Date, endDate: Date, type: PaymentType) => {
+        return this.find({
+            where: {
+                user: user,
+                date: MoreThan(startDate) && LessThan(endDate),
+                type: type
+            }
+        });
     }
 }

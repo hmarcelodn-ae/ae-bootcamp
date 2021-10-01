@@ -7,6 +7,7 @@ import { authorize } from '../middlewares/authorize.middleware';
 import { validateRequest } from '../middlewares/validation-request.middleware';
 import { TransactionFillService } from '../application/transaction-fill.service';
 import { TransactionWithdrawService } from '../application/transaction-withdraw.service';
+import { TransactionPayService } from '../application/transaction-pay.service';
 
 @Service()
 export class TransactionController extends BaseController {
@@ -15,6 +16,7 @@ export class TransactionController extends BaseController {
     constructor(
         protected readonly transactionFillService: TransactionFillService,
         protected readonly transactionWithdrawService: TransactionWithdrawService,
+        protected readonly transactionPayService: TransactionPayService,
     ) {
         super();
 
@@ -41,7 +43,14 @@ export class TransactionController extends BaseController {
         next();
     }
 
-    pay = (req: Request, res: Response, next: NextFunction) => {
+    pay = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const {
+            value,
+            email,
+        } = req.body;
+
+        await this.transactionPayService.pay(value, req.currentUser!.uuid, email);
+
         res.status(200).send();
 
         next();
@@ -74,7 +83,13 @@ export class TransactionController extends BaseController {
 
         this.router.post(
             `${this.path}/pay`,
-            body('value').exists().isNumeric(),
+            body('value').exists().isNumeric().custom(value => {
+                if (value <= 0) {
+                    return Promise.reject('Payment should be greater than 0')
+                }
+
+                return true;
+            }),
             body('email').exists().isEmail(),
             header('authorization').exists(),
             authorize,

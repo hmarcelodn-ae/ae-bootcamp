@@ -7,7 +7,7 @@ import { UserRepository } from '../repository/user.repository';
 
 @Service()
 export class TransactionFillService {
-    fill = async (value: number, userId: number): Promise<void> => {
+    fill = async (value: number, userId: number): Promise<Transaction> => {
         const userRepository = getCustomRepository(UserRepository);
         const transactionRepository = getCustomRepository(TransactionRepository);
 
@@ -22,6 +22,6 @@ export class TransactionFillService {
         transaction.value = value;
         transaction.user = user;
 
-        await transactionRepository.save(transaction);
+        return transactionRepository.save(transaction);
     }
 }

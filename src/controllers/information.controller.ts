@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import { query } from 'express-validator';
 import { Service } from 'typedi';
 import url from 'url';
-import { ExchangeRateService } from '../application/exchange-rate.service';
 import { InformationBalanceService } from '../application/information-balance.service';
 import { InformationSeriesService } from '../application/information-series.service';
 import { InformationSummaryService } from '../application/information-summary.service';
@@ -78,7 +77,11 @@ export class InformationController extends BaseController {
         next();
     }
     
-    forecast = (req: Request, res: Response, next: NextFunction) => {}
+    forecast = (req: Request, res: Response, next: NextFunction) => {
+        res.status(200).send();
+
+        next();
+    }
 
     protected initializeRouter(): void {
         this.router.get(
@@ -111,6 +114,24 @@ export class InformationController extends BaseController {
 
         this.router.get(
             `${this.path}/forecast`,
+            query('currency').exists().notEmpty(),
+            query('days').exists().notEmpty(),
+            query('type').exists().notEmpty().custom((value) => {
+                const allowedValues = [
+                    'payment_fill',
+                    'payment_withdraw',
+                    'payment_made',
+                    'payment_received'
+                ];
+
+                if (!allowedValues.includes(value)) {
+                    Promise.reject('type is invalid. It can be: payment_fill, payment_withdraw, payment_made, payment_received ');
+                }
+
+                return true;
+            }),
+            authorize,
+            validateRequest,
             this.forecast
         );
     }    

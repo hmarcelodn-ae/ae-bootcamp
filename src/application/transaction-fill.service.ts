@@ -1,9 +1,9 @@
-import { Service } from "typedi";
-import { getCustomRepository } from "typeorm";
-import { PaymentType, Transaction } from "../entity/transaction";
-import { User } from "../entity/user";
-import { TransactionRepository } from "../repository/transaction.repository";
-import { UserRepository } from "../repository/user.repository";
+import { Service } from 'typedi';
+import { getCustomRepository } from 'typeorm';
+import { PaymentType, Transaction } from '../entity/transaction';
+import { UserNotFoundError } from '../errors/user-not-found.error';
+import { TransactionRepository } from '../repository/transaction.repository';
+import { UserRepository } from '../repository/user.repository';
 
 @Service()
 export class TransactionFillService {
@@ -14,7 +14,7 @@ export class TransactionFillService {
         const user = await userRepository.findOne({ id: userId });
 
         if (!user) {
-            throw new Error();
+            throw new UserNotFoundError();
         }
 
         const transaction = new Transaction();

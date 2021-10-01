@@ -18,7 +18,8 @@ export class ExchangeRateRepository extends Repository<ExchangeRate> {
         return this.findOne({
             where: {
                 quote: `${from}${to}`
-            }
+            },
+            order: { id: 'DESC' }
         });
     }
 }

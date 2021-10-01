@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { query } from 'express-validator';
 import { Service } from 'typedi';
+import url from 'url';
+import { ExchangeRateService } from '../application/exchange-rate.service';
 import { InformationBalanceService } from '../application/information-balance.service';
 import { authorize } from '../middlewares/authorize.middleware';
 import { validateRequest } from '../middlewares/validation-request.middleware';
@@ -11,7 +13,7 @@ export class InformationController extends BaseController {
     public path: string = '/information';
 
     constructor(
-        protected readonly informationBalanceService: InformationBalanceService
+        protected readonly informationBalanceService: InformationBalanceService,
     ) {
         super();
 
@@ -19,7 +21,11 @@ export class InformationController extends BaseController {
     }
 
     balance = async (req: Request, res: Response, next: NextFunction) => {
-        const balance = await this.informationBalanceService.getBalance(req.currentUser!.uuid);
+        const query = url.parse(req.url, true).query;
+        const balance = await this.informationBalanceService.getBalance(
+            req.currentUser!.uuid,
+            query.currency!.toString(),
+        );
 
         res.status(200).send({
             balance

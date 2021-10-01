@@ -1,7 +1,7 @@
-import { Service } from "typedi";
-import { getCustomRepository } from "typeorm";
-import { TokenBlackList } from "../entity/token_black_list";
-import { TokenBlackListRepository } from "../repository/token-black-list.repository";
+import { Service } from 'typedi';
+import { getCustomRepository } from 'typeorm';
+import { TokenBlackList } from '../entity/token-black-list';
+import { TokenBlackListRepository } from '../repository/token-black-list.repository';
 
 @Service()
 export class UserLogoutService {

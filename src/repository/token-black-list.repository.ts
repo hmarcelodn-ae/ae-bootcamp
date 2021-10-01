@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { TokenBlackList } from '../entity/token_black_list';
+import { TokenBlackList } from '../entity/token-black-list';
 
 @EntityRepository(TokenBlackList)
 export class TokenBlackListRepository extends Repository<TokenBlackList> {

@@ -5,10 +5,13 @@ import { UserNotFoundError } from '../errors/user-not-found.error';
 import { ForecastResponseDto } from '../model/forecast-response.dto';
 import { TransactionRepository } from '../repository/transaction.repository';
 import { UserRepository } from '../repository/user.repository';
+import { ExchangeRateService } from './exchange-rate.service';
 
 @Service()
 export class InformationForecastService {
-    constructor() {}
+    constructor(
+        protected readonly exchangeRateService: ExchangeRateService
+    ) {}
 
     forecast = async (userId: number, currency: string, days: number, type: string) => {
         const transactionRepository = getCustomRepository(TransactionRepository);
@@ -20,17 +23,34 @@ export class InformationForecastService {
             throw new UserNotFoundError();
         }
 
+        const exchangeRate = await this.exchangeRateService.getExchangeRate(currency);
         const lastNDaysTrx = await transactionRepository.getTransactionsByLastNDays(user, days, type);
-        const forecastResponse: ForecastResponseDto = {};
+        const forecastResponse: ForecastResponseDto = {
+            dates: []
+        };
 
         for ( const aggregatedTrx of lastNDaysTrx ) {
-            forecastResponse.dates?.push(aggregatedTrx.date.toISOString());
+            forecastResponse.dates!.push(aggregatedTrx.date.toString());
             
+            const totalAmount = exchangeRate.rate * aggregatedTrx.amount;
+
             if ( type === PaymentType.PAYMENT_FILL.toString() ) {
-                forecastResponse.payment_fill
+                forecastResponse.payment_fill = [totalAmount];
+            }
+
+            if ( type === PaymentType.PAYMENT_MADE.toString() ) {
+                forecastResponse.payment_made = [totalAmount];
+            }
+
+            if ( type === PaymentType.PAYMENT_RECEIVED.toString() ) {
+                forecastResponse.payment_received = [totalAmount];
+            }
+
+            if ( type === PaymentType.PAYMENT_WITHDRAW.toString() ) {
+                forecastResponse.payment_withdraw = [totalAmount];
             }
         }
 
-        return lastNDaysTrx;
+        return forecastResponse;
     }
 }

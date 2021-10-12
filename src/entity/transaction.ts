@@ -29,7 +29,7 @@ export class Transaction {
     })
     type: PaymentType;
 
-    @Column()
+    @Column({ type: 'decimal' })
     value: number;
 
     @Column()

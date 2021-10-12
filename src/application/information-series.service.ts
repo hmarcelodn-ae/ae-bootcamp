@@ -7,6 +7,7 @@ import { UserNotFoundError } from '../errors/user-not-found.error';
 import { UserRepository } from '../repository/user.repository';
 import { ExchangeRateService } from './exchange-rate.service';
 import { SeriesResultResponseDto } from '../model/series-result-response.dto';
+import { SeriesInputDto } from '../model/series-input.dto';
 
 interface TrxPaymentTypeHash {
     [key: string]: number
@@ -19,10 +20,10 @@ export class InformationSeriesService {
         protected readonly transactionService: TransactionService,
     ) {}
 
-    series = async (userId: number, startDate: Date, endDate: Date, currency: string): Promise<SeriesResultResponseDto> => {
+    series = async (userId: number, seriesInput: SeriesInputDto): Promise<SeriesResultResponseDto> => {
         const userRepository = getCustomRepository(UserRepository);
         const user = await userRepository.findOne({ id: userId });
-        const exchangeRate = await this.exchangeRateService.getExchangeRate(currency);
+        const exchangeRate = await this.exchangeRateService.getExchangeRate(seriesInput.currency);
 
         if (!user) {
             throw new UserNotFoundError();
@@ -30,29 +31,29 @@ export class InformationSeriesService {
 
         const filledTrx = this.transactionService.getTransactionsByPeriod(
             user,
-            startDate,
-            endDate,
+            seriesInput.startDate,
+            seriesInput.endDate,
             PaymentType.PAYMENT_FILL
         );
 
         const madeTrx = this.transactionService.getTransactionsByPeriod(
             user,
-            startDate,
-            endDate,
+            seriesInput.startDate,
+            seriesInput.endDate,
             PaymentType.PAYMENT_MADE
         );
 
         const receivedTrx = this.transactionService.getTransactionsByPeriod(
             user,
-            startDate,
-            endDate,
+            seriesInput.startDate,
+            seriesInput.endDate,
             PaymentType.PAYMENT_RECEIVED
         );
 
         const withdrawTrx = this.transactionService.getTransactionsByPeriod(
             user,
-            startDate,
-            endDate,
+            seriesInput.startDate,
+            seriesInput.endDate,
             PaymentType.PAYMENT_WITHDRAW
         );
 

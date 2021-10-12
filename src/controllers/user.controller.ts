@@ -1,11 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { Service } from 'typedi';
-import { body, header, validationResult } from 'express-validator';
+import { body, header } from 'express-validator';
 
 import { BaseController } from './base';
 import { UserLoginService } from '../application/user-login.service';
 import { UserSignupService } from '../application/user-signup.service';
-import { RequestValidationError } from '../errors/request-validation.error';
 import { UserLogoutService } from '../application/user-logout.service';
 import { validateRequest } from '../middlewares/validation-request.middleware';
 

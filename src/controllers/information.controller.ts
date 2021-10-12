@@ -8,6 +8,9 @@ import { InformationSeriesService } from '../application/information-series.serv
 import { InformationSummaryService } from '../application/information-summary.service';
 import { authorize } from '../middlewares/authorize.middleware';
 import { validateRequest } from '../middlewares/validation-request.middleware';
+import { ForecastInputDto } from '../model/forecast-input.dto';
+import { SeriesInputDto } from '../model/series-input.dto';
+import { SummaryInputDto } from '../model/summary-input.dto';
 import { BaseController } from './base';
 
 @Service()
@@ -46,12 +49,16 @@ export class InformationController extends BaseController {
             end_date,
             currency
         } = query;
+
+        const summaryInput: SummaryInputDto = {
+            startDate: new Date(start_date!.toString()),
+            endDate: new Date(end_date!.toString()),
+            currency: currency!.toString().toUpperCase()
+        };
         
         const summary = await this.informationSummaryService.summary(
             req.currentUser!.uuid,  
-            new Date(start_date!.toString()), 
-            new Date(end_date!.toString()), 
-            currency!.toString().toUpperCase()
+            summaryInput
         );
 
         res.status(200).send(summary);
@@ -67,11 +74,15 @@ export class InformationController extends BaseController {
             currency
         } = query;
 
+        const seriesInput: SeriesInputDto = {
+            startDate: new Date(start_date!.toString()),
+            endDate: new Date(end_date!.toString()),
+            currency: currency!.toString().toUpperCase()
+        };
+
         const series = await this.informationSeriesService.series(
             req.currentUser!.uuid,
-            new Date(start_date!.toString()), 
-            new Date(end_date!.toString()), 
-            currency!.toString().toUpperCase()
+            seriesInput
         );
 
         res.status(200).send(series);
@@ -81,17 +92,11 @@ export class InformationController extends BaseController {
     
     forecast = async (req: Request, res: Response, next: NextFunction) => {
         const query = url.parse(req.url, true).query;
-        const {
-            currency,
-            days,
-            type
-        } = query;
+        const forecastInput: ForecastInputDto = query as any;
 
         const forecast = await this.informationForecastService.forecast(
             req.currentUser!.uuid,
-            currency!.toString(),
-            Number(days),
-            type!.toString()
+            forecastInput
         );
 
         res.status(200).send(forecast);

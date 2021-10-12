@@ -3,6 +3,7 @@ import { query } from 'express-validator';
 import { Service } from 'typedi';
 import url from 'url';
 import { InformationBalanceService } from '../application/information-balance.service';
+import { InformationForecastService } from '../application/information-forecast.service';
 import { InformationSeriesService } from '../application/information-series.service';
 import { InformationSummaryService } from '../application/information-summary.service';
 import { authorize } from '../middlewares/authorize.middleware';
@@ -17,6 +18,7 @@ export class InformationController extends BaseController {
         protected readonly informationBalanceService: InformationBalanceService,
         protected readonly informationSummaryService: InformationSummaryService,
         protected readonly informationSeriesService: InformationSeriesService,
+        protected readonly informationForecastService: InformationForecastService,
     ) {
         super();
 
@@ -77,8 +79,22 @@ export class InformationController extends BaseController {
         next();
     }
     
-    forecast = (req: Request, res: Response, next: NextFunction) => {
-        res.status(200).send();
+    forecast = async (req: Request, res: Response, next: NextFunction) => {
+        const query = url.parse(req.url, true).query;
+        const {
+            currency,
+            days,
+            type
+        } = query;
+
+        const forecast = await this.informationForecastService.forecast(
+            req.currentUser!.uuid,
+            currency!.toString(),
+            Number(days),
+            type!.toString()
+        );
+
+        res.status(200).send(forecast);
 
         next();
     }
@@ -124,7 +140,7 @@ export class InformationController extends BaseController {
                     'payment_received'
                 ];
 
-                if (!allowedValues.includes(value)) {
+                if (allowedValues.indexOf(value) === -1) {
                     Promise.reject('type is invalid. It can be: payment_fill, payment_withdraw, payment_made, payment_received ');
                 }
 

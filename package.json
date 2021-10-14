@@ -51,7 +51,8 @@
       "reflect-metadata": "^0.1.10",
       "tsconfig-paths": "^3.11.0",
       "typedi": "^0.10.0",
-      "typeorm": "0.2.37"
+      "typeorm": "0.2.37",
+      "ts-node": "3.3.0"
    },
    "devDependencies": {
       "@commitlint/cli": "^13.2.0",

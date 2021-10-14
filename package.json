@@ -6,7 +6,7 @@
    "scripts": {
       "commit": "git-cz",
       "start:dev": "cross-env NODE_ENV=development nodemon --watch src --delay 1 --exec 'ts-node' src/server.ts",
-      "start": "cross-env NODE_ENV=production ts-node src/server.ts",
+      "start": "ts-node src/server.ts",
       "debug": "cross-env NODE_ENV=development nodemon --watch src --delay 1 --exec node --inspect-brk -r ts-node/register src/server.ts",
       "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
    },

@@ -53,12 +53,7 @@
       "typedi": "^0.10.0",
       "typeorm": "0.2.37",
       "ts-node": "3.3.0",
-      "typescript": "3.3.3333"
-   },
-   "devDependencies": {
-      "@commitlint/cli": "^13.2.0",
-      "@commitlint/config-conventional": "^13.2.0",
-      "@commitlint/prompt-cli": "^13.2.0",
+      "typescript": "3.3.3333",
       "@types/axios": "^0.14.0",
       "@types/compression": "^1.7.2",
       "@types/cookie-parser": "^1.4.2",
@@ -69,12 +64,15 @@
       "@types/jsonwebtoken": "^8.5.5",
       "@types/lodash": "^4.14.175",
       "@types/node": "^8.0.29",
-      "@types/node-cron": "^2.0.4",
+      "@types/node-cron": "^2.0.4"
+   },
+   "devDependencies": {
+      "@commitlint/cli": "^13.2.0",
+      "@commitlint/config-conventional": "^13.2.0",
+      "@commitlint/prompt-cli": "^13.2.0",
       "cz-conventional-changelog": "^3.3.0",
       "git-cz": "^4.7.6",
       "husky": "^7.0.2",
-      "nodemon": "^2.0.13",
-      "ts-node": "3.3.0",
-      "typescript": "3.3.3333"
+      "nodemon": "^2.0.13"
    }
 }

@@ -6,6 +6,7 @@ import { UserController } from './controllers/user.controller';
 import { PostgresClient } from './infrastructure/postgres-client.wrapper';
 import { TransactionController } from './controllers/transaction.controller';
 import { InformationController } from './controllers/information.controller';
+import { HomeController } from './controllers/home.controller';
 
 const postgresClient = Container.get(PostgresClient);
 
@@ -15,6 +16,7 @@ const app = new App(
         Container.get(UserController),
         Container.get(TransactionController),
         Container.get(InformationController),
+        Container.get(HomeController),
     ]
 );
 

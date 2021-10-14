@@ -2,6 +2,7 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application } from 'express';
+import path from 'path';
 import { BaseController } from './controllers/base';
 import { errorHandler } from './middlewares/error-handler.middleware';
 
@@ -32,6 +33,8 @@ export class App {
         this.app.use(express.json());
         this.app.use(cookieParser());
         this.app.use(cors());
+        this.app.set('view engine', 'ejs');
+        this.app.set('views', path.resolve( __dirname, 'views') ); 
     }
 
     protected initializeControllers = (controllers: Array<BaseController>): void => {

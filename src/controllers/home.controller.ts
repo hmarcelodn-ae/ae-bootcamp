@@ -12,6 +12,15 @@ export class HomeController extends BaseController {
         this.initializeRouter();
     }
 
+    /**
+     * @api {get} https://ae-bootcamp-be.herokuapp.com/ Get Open AE Bootcamp Welcome Page
+     * @apiName Home
+     * @apiGroup Home
+     * @apiVersion 1.0.0
+     *
+     * @apiSuccessExample {json} Success-Response:
+     *     HTTP/1.1 200 OK
+     */
     home = (req: Request, res: Response, next: NextFunction) => {
         res.render('pages/home');
         next();

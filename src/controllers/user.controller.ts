@@ -22,6 +22,31 @@ export class UserController extends BaseController {
         this.initializeRouter();
     }
 
+    /**
+     * @api {post} https://ae-bootcamp-be.herokuapp.com/user/signup Get Signup
+     * @apiName Signup
+     * @apiGroup User
+     * @apiVersion 0.0.0
+     * 
+     * @apiParam {String} first_name User first name
+     * @apiParam {String} last_name User last name.
+     * @apiParam {String} id User personal ID.
+     * @apiParam {String} birth_date User birth date.
+     * @apiParam {String} email User email for signin.
+     * @apiParam {String} password User password. 
+     *
+     * @apiSuccessExample {json} Success-Response:
+     * HTTP/1.1 200 OK
+     * {
+     *       "email": "hugo.delnegro2@agileengine.com",
+     *       "birthDate": "1988-08-25T00:00:00.000Z",
+     *       "firstName": "Hugo",
+     *       "lastName": "Del Negro",
+     *       "password": "U2FsdGVkX1+rWb12liYUUQG1HtotWw/ZyCt0WiPG8SY=",
+     *       "userIdentity": "33996336",
+     *       "id": 2
+     * }
+     */
     signup = async (req: Request, res: Response, next: NextFunction) => {
         const user = await this.userSignupService.signup(req.body);
 
@@ -30,6 +55,21 @@ export class UserController extends BaseController {
         return next();
     }
 
+    /**
+     * @api {post} https://ae-bootcamp-be.herokuapp.com/user/signin Get Signin
+     * @apiName Signin
+     * @apiGroup User
+     * @apiVersion 0.0.0
+     *
+     * @apiParam {String} email User email for signin.
+     * @apiParam {String} password User password for signin.
+     * 
+     * @apiSuccessExample {json} Success-Response:
+     *  HTTP/1.1 200 OK
+     *  {
+     *       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imh1Z28uZGVsbmVncm9AYWdpbGVlbmdpbmUuY29tIiwidXVpZCI6MSwiZmlyc3ROYW1lIjoiSHVnbyIsImxhc3ROYW1lIjoiRGVsIE5lZ3JvIiwiaWQiOiIzMzk5NjMzNiIsImlhdCI6MTYzNDMyMjg2NCwiZXhwIjoxNjM0MzIzNzY0fQ.YtoaDB4sprEtOxVRXKuA9d3clUWxTu928jD1PylUTr8"
+     *  }
+     */
     signin = async (req: Request, res: Response, next: NextFunction) => {
         const token = await this.userLoginService.login(req.body);
 
@@ -38,6 +78,15 @@ export class UserController extends BaseController {
         return next();
     }
 
+    /**
+     * @api {post} https://ae-bootcamp-be.herokuapp.com/user/logout Get Logout
+     * @apiName Logout
+     * @apiGroup User
+     * @apiVersion 0.0.0
+     *
+     * @apiSuccessExample {json} Success-Response:
+     *     HTTP/1.1 200 OK
+     */    
     logout = async (req: Request, res: Response, next: NextFunction) => {
         await this.userLogoutService.logout(req.headers.authorization!);
 

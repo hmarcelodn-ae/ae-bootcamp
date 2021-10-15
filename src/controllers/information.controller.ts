@@ -28,6 +28,20 @@ export class InformationController extends BaseController {
         this.initializeRouter();
     }
 
+    /**
+     * @api {get} https://ae-bootcamp-be.herokuapp.com/information/balance?currency=:currency Get the user balance
+     * @apiName Balance
+     * @apiGroup Information
+     * @apiVersion 0.0.0
+     * 
+     * @apiParam {String} currency The currency conversion, for example USD, AUD
+     *
+     * @apiSuccessExample {json} Success-Response:
+     * HTTP/1.1 200 OK
+     * {
+     *       "balance": 500
+     * }
+     */
     balance = async (req: Request, res: Response, next: NextFunction) => {
         const query = url.parse(req.url, true).query;
         const balance = await this.informationBalanceService.getBalance(
@@ -42,6 +56,25 @@ export class InformationController extends BaseController {
         next();
     }
 
+    /**
+     * @api {get} https://ae-bootcamp-be.herokuapp.com/information/summary?currency=:currency&start_date=:startDate&end_date=:endDate Get Summary
+     * @apiName Summary
+     * @apiGroup Information
+     * @apiVersion 0.0.0
+     *
+     * @apiParam {String} currency Currency conversion
+     * @apiParam {String} startDate Start date range for summary
+     * @apiParam {String} endDate End date range for summary
+     * 
+     * @apiSuccessExample {json} Success-Response:
+     * HTTP/1.1 200 OK
+     * {
+     *       "payments_received": 0,
+     *       "payments_made": 0,
+     *       "withdrawn": 500,
+     *       "filled": 1000
+     *  }
+     */
     summary = async (req: Request, res: Response, next: NextFunction) => {
         const query = url.parse(req.url, true).query;
         const {
@@ -66,6 +99,37 @@ export class InformationController extends BaseController {
         next();
     }
 
+    /**
+     * @api {get} https://ae-bootcamp-be.herokuapp.com/information/series?currency=:currency&start_date=:startDate&end_date=:endDate Get Series
+     * @apiName Series
+     * @apiGroup Information
+     * @apiVersion 0.0.0
+     *
+     * @apiParam {String} currency Currency conversion
+     * @apiParam {String} startDate Start date range for summary
+     * @apiParam {String} endDate End date range for summary
+     * 
+     * 
+     * @apiSuccessExample {json} Success-Response:
+     * HTTP/1.1 200 OK
+     * {
+     *       "payments_received": [
+     *           0
+     *       ],
+     *       "payments_made": [
+     *           0
+     *       ],
+     *       "withdrawn": [
+     *           500
+     *       ],
+     *       "filled": [
+     *           1000
+     *       ],
+     *       "dates": [
+     *           "2021-10-12"
+     *       ]
+     *   }
+     */
     series = async (req: Request, res: Response, next: NextFunction) => {
         const query = url.parse(req.url, true).query;
         const {
@@ -90,6 +154,27 @@ export class InformationController extends BaseController {
         next();
     }
     
+    /**
+     * @api {get} https://ae-bootcamp-be.herokuapp.com/information/forecast?currency=:currency&days=:days&type=:type Get Forecast
+     * @apiName Forecast
+     * @apiGroup Information
+     * @apiVersion 0.0.0
+     * 
+     * @apiParam {String} currency Currency conversion
+     * @apiParam {Number} days Number of days for forecasting (3 would be 3 days back for example)
+     * @apiParam {String} type End date range for summary [payment_received, payment_made, payment_withdraw, payment_fill]
+     *
+     * @apiSuccessExample {json} Success-Response:
+     * HTTP/1.1 200 OK
+     * {
+     *       "dates": [
+     *           "2021-10-12"
+     *       ],
+     *       "payment_fill": [
+     *           1000
+     *       ]
+     * }
+     */
     forecast = async (req: Request, res: Response, next: NextFunction) => {
         const query = url.parse(req.url, true).query;
         const forecastInput: ForecastInputDto = query as any;

@@ -23,6 +23,17 @@ export class TransactionController extends BaseController {
         this.initializeRouter();
     }
 
+    /**
+     * @api {post} https://ae-bootcamp-be.herokuapp.com/transaction/fill Post Fill
+     * @apiName Fill
+     * @apiGroup Transaction
+     * @apiVersion 0.0.0
+     * 
+     * @apiParam {Number} value Amount of money to fill in the wallet
+     *
+     * @apiSuccessExample {json} Success-Response:
+     * HTTP/1.1 201 OK
+     */
     fill = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { value } = req.body;
 
@@ -33,6 +44,17 @@ export class TransactionController extends BaseController {
         next();
     }
 
+    /**
+     * @api {post} https://ae-bootcamp-be.herokuapp.com/transaction/withdraw Post Withdraw
+     * @apiName Withdraw
+     * @apiGroup Transaction
+     * @apiVersion 0.0.0
+     *
+     * @apiParam {Number} value Amount of money to fill in the wallet
+     * 
+     * @apiSuccessExample {json} Success-Response:
+     *     HTTP/1.1 200 OK
+     */
     withdraw = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { value } = req.body;
 
@@ -43,6 +65,18 @@ export class TransactionController extends BaseController {
         next();
     }
 
+    /**
+     * @api {post} https://ae-bootcamp-be.herokuapp.com/transaction/pay Post Pay
+     * @apiName Pay
+     * @apiGroup Transaction
+     * @apiVersion 0.0.0
+     * 
+     * @apiParam {String} value Amount of money to pay someone else
+     * @apiParam {String} email Email of the user to be paid
+     *
+     * @apiSuccessExample {json} Success-Response:
+     *     HTTP/1.1 200 OK
+     */
     pay = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const {
             value,
@@ -56,6 +90,15 @@ export class TransactionController extends BaseController {
         next();
     }
 
+    /**
+     * @api {get} https://ae-bootcamp-be.herokuapp.com/transaction Get
+     * @apiName Get
+     * @apiGroup Transaction
+     * @apiVersion 0.0.0
+     *
+     * @apiSuccessExample {json} Success-Response:
+     *     HTTP/1.1 200 OK
+     */
     get = (req: Request, res: Response, next: NextFunction) => {
         res.status(200).send();
 

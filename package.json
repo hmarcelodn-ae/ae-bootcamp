@@ -8,8 +8,14 @@
       "start:dev": "cross-env NODE_ENV=development nodemon --watch src --delay 1 --exec 'ts-node' src/server.ts",
       "start": "ts-node src/server.ts",
       "debug": "cross-env NODE_ENV=development nodemon --watch src --delay 1 --exec node --inspect-brk -r ts-node/register src/server.ts",
-      "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
+      "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+      "apidoc": "apidoc -i src/ -o ./public/apidoc/"
    },
+   "apidoc": {
+      "name": "AE Bootcamp",
+      "title": "AE Bootcamp",
+      "url" : "https://api.github.com/v1"
+    },
    "husky": {
       "hooks": {
          "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",

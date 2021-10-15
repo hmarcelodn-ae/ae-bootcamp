@@ -25,3 +25,8 @@ const app = new App(
 (() => {
     app.listen();
 })();
+
+process.on('SIGINT', () => {
+    process.exit();
+});
+

@@ -34,7 +34,8 @@ export class App {
         this.app.use(cookieParser());
         this.app.use(cors());
         this.app.set('view engine', 'ejs');
-        this.app.set('views', path.resolve( __dirname, 'views') ); 
+        this.app.set('views', path.resolve( __dirname, 'views'));
+        this.app.use(express.static('public')); 
     }
 
     protected initializeControllers = (controllers: Array<BaseController>): void => {
